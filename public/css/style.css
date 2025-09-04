@@ -1,0 +1,247 @@
+/* Manga Reader - Unified CSS */
+:root {
+  --bs-body-bg: #121212;
+  --bs-body-color: #f8f9fa;
+  --primary-color: #6f42c1;
+  --secondary-color: #fd7e14;
+  --accent-color: #20c997;
+  --card-bg: #1e1e1e;
+  --card-hover-bg: #2a2a2a;
+  --reader-bg: #0a0a0a;
+}
+
+[data-bs-theme="light"] {
+  --bs-body-bg: #f8f9fa;
+  --bs-body-color: #212529;
+  --card-bg: #ffffff;
+  --card-hover-bg: #f0f0f0;
+  --reader-bg: #f5f5f5;
+}
+
+/* Global Styles */
+body {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  transition: background-color 0.3s, color 0.3s;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+}
+
+/* Navigation */
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+/* Manga Cards */
+.manga-card {
+  transition: all 0.3s ease;
+  background-color: var(--card-bg);
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.manga-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+  background-color: var(--card-hover-bg);
+}
+
+/* ✅ Updated Thumbnail Styling */
+.manga-thumbnail {
+  width: 100%;
+  height: 250px; /* consistent height */
+  object-fit: cover; /* crop to fit like covers */
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  transition: transform 0.3s ease;
+}
+
+.manga-card:hover .manga-thumbnail {
+  transform: scale(1.05);
+}
+
+/* ✅ Truncated Title */
+.card-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;       /* Prevent wrapping */
+  overflow: hidden;          /* Hide overflow */
+  text-overflow: ellipsis;   /* Add "..." */
+  max-width: 100%;
+  cursor: pointer;           /* Indicate hover available */
+  position: relative;
+}
+
+.card-title:hover::after {
+  content: attr(data-fulltitle); /* show full title on hover */
+  position: absolute;
+  left: 0;
+  top: -1.5rem;
+  background: var(--card-hover-bg);
+  color: var(--bs-body-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  white-space: normal;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+/* Card Content */
+.card-title a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.card-title a:hover {
+  color: var(--primary-color);
+}
+
+/* Badges */
+.badge {
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+}
+
+/* Hero Section */
+.bg-gradient {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+}
+
+/* Chapter List */
+.list-group-item {
+  background-color: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+[data-bs-theme="light"] .list-group-item {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.list-group-item-action:hover {
+  background-color: var(--primary-color);
+  color: white;
+  transform: translateX(5px);
+}
+
+/* Reader Page Styles */
+.reader-navbar {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  backdrop-filter: blur(10px);
+}
+
+.reader-content {
+  background-color: var(--reader-bg);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.reader-page {
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto 1.5rem;
+  display: block;
+  border-radius: 4px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.reader-page:hover {
+  transform: scale(1.01);
+}
+
+.reader-controls {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 50px;
+  padding: 0.75rem 1.5rem;
+  width: auto;
+  margin: 0 auto;
+  transition: opacity 0.3s ease;
+}
+
+/* Loading spinner */
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--card-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+
+/* Hover effects for clickable elements */
+.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.clickable:hover {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .manga-thumbnail {
+    height: 200px; /* smaller on mobile */
+  }
+  
+  .reader-controls {
+    flex-direction: column;
+    gap: 0.5rem;
+    border-radius: 20px;
+  }
+  
+  .reader-page {
+    margin: 0 auto 1rem;
+  }
+}
+
+/* Animation for page loading */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.reader-page {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Focus styles for accessibility */
+a:focus, button:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+/* Footer styling */
+footer {
+  margin-top: auto;
+}

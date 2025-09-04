@@ -1,0 +1,51 @@
+<%- include('partials/header', {title: title}) %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4">
+  <h2 class="mb-4">Search Manga</h2>
+  
+  <form class="d-flex mb-4" action="/search" method="GET">
+    <input class="form-control me-2" type="search" placeholder="Search by title..." name="q" value="<%= query %>">
+    <button class="btn btn-primary" type="submit">
+      <i class="bi bi-search"></i> Search
+    </button>
+  </form>
+  
+  <% if (query) { %>
+    <p class="text-muted">Found <%= results.length %> results for "<%= query %>"</p>
+  <% } %>
+  
+  <% if (results.length > 0) { %>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+      <% results.forEach(m => { %>
+        <div class="col">
+          <div class="card h-100 manga-card">
+            <img src="<%= m.cover %>" class="card-img-top" alt="<%= m.title %>">
+            <div class="card-body">
+              <h5 class="card-title"><%= m.title %></h5>
+              <p class="card-text text-muted"><%= m.author %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <a href="/manga/<%= m.id %>" class="btn btn-sm btn-outline-primary">Details</a>
+                <small class="text-muted"><%= m.chapters.length %> chapters</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else if (query) { %>
+    <div class="text-center py-5">
+      <i class="bi bi-search display-1 text-muted"></i>
+      <h3 class="text-muted">No results found</h3>
+      <p>Try different search terms</p>
+    </div>
+  <% } else { %>
+    <div class="text-center py-5">
+      <i class="bi bi-search display-1 text-muted"></i>
+      <h3 class="text-muted">Search for manga</h3>
+      <p>Enter a title in the search box above</p>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>

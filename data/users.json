@@ -1,0 +1,19 @@
+[
+  {
+    "id": 1,
+    "username": "mangalover",
+    "email": "user@example.com",
+    "readLater": [2],
+    "library": [
+      {
+        "mangaId": 1,
+        "lastReadChapter": 2
+      }
+    ],
+    "settings": {
+      "theme": "dark",
+      "readerMode": "single-page",
+      "notifications": true
+    }
+  }
+]

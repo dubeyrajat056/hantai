@@ -1,0 +1,69 @@
+<%- include('partials/header', {title: title}) %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4">
+  <% if (manga) { %>
+    <div class="row">
+      <div class="col-md-4">
+        <img src="<%= manga.thumbnail %>" class="img-fluid rounded manga-detail-thumbnail" alt="<%= manga.title %>">
+      </div>
+      <div class="col-md-8">
+        <h1><%= manga.title %></h1>
+        <p class="text-muted">by <%= manga.author || 'Unknown Author' %></p>
+        
+        <div class="mb-3">
+          <span class="badge bg-<%= manga.status === 'Ongoing' ? 'warning' : 'success' %> me-2">
+            <%= manga.status || 'Unknown Status' %>
+          </span>
+          <!-- FIX: Added safe check for genres property -->
+          <% if (manga.genres && manga.genres.length > 0) { %>
+            <% manga.genres.forEach(genre => { %>
+              <span class="badge bg-secondary me-1"><%= genre %></span>
+            <% }) %>
+          <% } else { %>
+            <span class="badge bg-secondary">No genres available</span>
+          <% } %>
+        </div>
+        
+        <p><%= manga.description || 'No description available.' %></p>
+        
+        <% if (manga.chapters && manga.chapters.length > 0) { %>
+          <div class="d-flex gap-2 mb-4">
+            <a href="/read/<%= manga.id %>/<%= manga.chapters[0].id %>" class="btn btn-primary">
+              <i class="bi bi-book"></i> Read First Chapter
+            </a>
+            <button class="btn btn-outline-primary">
+              <i class="bi bi-bookmark"></i> Read Later
+            </button>
+          </div>
+        <% } else { %>
+          <div class="alert alert-info">
+            No chapters available for this manga.
+          </div>
+        <% } %>
+      </div>
+    </div>
+    
+    <% if (manga.chapters && manga.chapters.length > 0) { %>
+      <hr class="my-5">
+      
+      <h2>Chapters</h2>
+      <div class="list-group">
+        <% manga.chapters.forEach(chapter => { %>
+          <a href="/read/<%= manga.id %>/<%= chapter.id %>" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">Chapter <%= chapter.chapterNumber %></h5>
+              <small><%= chapter.title %></small>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  <% } else { %>
+    <div class="alert alert-danger">
+      Manga not found.
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>

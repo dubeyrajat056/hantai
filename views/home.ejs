@@ -1,0 +1,47 @@
+<%- include('partials/header', {title: title}) %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="p-5 bg-primary bg-gradient rounded-3 text-light">
+        <div class="container-fluid py-5">
+          <h1 class="display-5 fw-bold">Welcome to MangaReader</h1>
+          <p class="col-md-8 fs-4">Read your favorite manga online for free. Thousands of titles available!</p>
+          <a href="/search" class="btn btn-light btn-lg">Explore Manga</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="mb-4">Trending Manga</h2>
+  
+  <% if (manga && manga.length > 0) { %>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+      <% manga.forEach(m => { %>
+        <div class="col">
+          <div class="card h-100 manga-card">
+            <img src="<%= m.thumbnail %>" class="card-img-top" alt="<%= m.title %>">
+            <div class="card-body">
+              <h5 class="card-title"><%= m.title %></h5>
+              <p class="card-text text-muted"><%= m.author %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <a href="/manga/<%= m.id %>" class="btn btn-sm btn-outline-primary">Details</a>
+                <!-- FIX: Added safe check for chapters property -->
+                <small class="text-muted"><%= m.chapters ? m.chapters.length : 0 %> chapters</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="text-center py-5">
+      <i class="bi bi-book display-1 text-muted"></i>
+      <h3 class="text-muted">No manga available</h3>
+      <p>Please check back later</p>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>

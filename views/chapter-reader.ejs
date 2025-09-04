@@ -1,0 +1,126 @@
+<%- include('partials/header', {title: title}) %>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/manga/<%= manga.id %>">
+      <i class="bi bi-arrow-left"></i> Back to Manga
+    </a>
+    <span class="navbar-text">
+      <%= manga.title %> - Chapter <%= chapter.chapterNumber %>
+    </span>
+    <div class="d-flex">
+      <button class="btn btn-outline-light me-2" id="prevBtn">
+        <i class="bi bi-chevron-left"></i> Prev
+      </button>
+      <button class="btn btn-outline-light" id="nextBtn">
+        Next <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="container-fluid my-4">
+  <div class="text-center" id="reader-content">
+    <% if (chapter.pages && chapter.pages.length > 0) { %>
+      <% chapter.pages.forEach((page, index) => { %>
+        <img src="<%= page %>" class="img-fluid mb-3 reader-page <%= index === 0 ? 'active' : '' %>" alt="Page <%= index + 1 %>" data-page="<%= index + 1 %>">
+      <% }) %>
+    <% } else { %>
+      <div class="alert alert-danger mt-5">
+        No pages available for this chapter.
+      </div>
+    <% } %>
+  </div>
+  
+  <div class="fixed-bottom bg-dark p-3 text-center d-none" id="readerControls">
+    <button class="btn btn-primary me-2" id="prevBtnBottom">
+      <i class="bi bi-chevron-left"></i> Previous Page
+    </button>
+    <span class="text-light me-2" id="pageIndicator">Page 1 of <%= chapter.pages ? chapter.pages.length : 0 %></span>
+    <button class="btn btn-primary" id="nextBtnBottom">
+      Next Page <i class="bi bi-chevron-right"></i>
+    </button>
+  </div>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const pages = document.querySelectorAll('.reader-page');
+    const pageIndicator = document.getElementById('pageIndicator');
+    let currentPage = 0;
+    
+    function showPage(index) {
+      if (index >= 0 && index < pages.length) {
+        pages.forEach(page => page.classList.remove('active'));
+        pages[index].classList.add('active');
+        currentPage = index;
+        
+        // Update page indicator
+        if (pageIndicator) {
+          pageIndicator.textContent = `Page ${currentPage + 1} of ${pages.length}`;
+        }
+        
+        // Scroll to the page
+        pages[index].scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    
+    function nextPage() {
+      if (currentPage < pages.length - 1) {
+        showPage(currentPage + 1);
+      }
+    }
+    
+    function prevPage() {
+      if (currentPage > 0) {
+        showPage(currentPage - 1);
+      }
+    }
+    
+    // Event listeners for buttons
+    document.getElementById('nextBtn').addEventListener('click', nextPage);
+    document.getElementById('prevBtn').addEventListener('click', prevPage);
+    document.getElementById('nextBtnBottom').addEventListener('click', nextPage);
+    document.getElementById('prevBtnBottom').addEventListener('click', prevPage);
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextPage();
+      if (e.key === 'ArrowLeft') prevPage();
+    });
+    
+    // Show controls when scrolling
+    let lastScrollTop = 0;
+    window.addEventListener('scroll', function() {
+      const st = window.pageYOffset || document.documentElement.scrollTop;
+      const controls = document.getElementById('readerControls');
+      
+      if (st > lastScrollTop) {
+        // Scrolling down
+        controls.classList.remove('d-none');
+      } else {
+        // Scrolling up
+        controls.classList.add('d-none');
+      }
+      
+      lastScrollTop = st <= 0 ? 0 : st;
+    }, false);
+  });
+</script>
+
+<style>
+  .reader-page {
+    display: none;
+  }
+  .reader-page.active {
+    display: block;
+  }
+  #readerControls {
+    opacity: 0.9;
+    border-radius: 10px 10px 0 0;
+    margin: 0 auto;
+    width: fit-content;
+  }
+</style>
+</body>
+</html>

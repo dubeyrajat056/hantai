@@ -1,0 +1,132 @@
+<%- include('partials/header', {title: title}) %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card">
+        <div class="card-body text-center">
+          <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Profile">
+          <h5 class="card-title"><%= user.username %></h5>
+          <p class="text-muted"><%= user.email %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="library-tab" data-bs-toggle="tab" data-bs-target="#library" type="button">Library</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="read-later-tab" data-bs-toggle="tab" data-bs-target="#read-later" type="button">Read Later</button>
+        </li>
+      </ul>
+      
+      <div class="tab-content mt-4" id="profileTabsContent">
+        <div class="tab-pane fade show active" id="library">
+          <h3>Your Library</h3>
+          <p class="text-muted">Manga you've started reading</p>
+          
+          <% if (user.library.length > 0) { %>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+              <% user.library.forEach(item => { %>
+                <div class="col">
+                  <div class="card h-100">
+                    <div class="row g-0">
+                      <div class="col-md-4">
+                        <img src="<%= mangaData.find(m => m.id === item.mangaId).cover %>" class="img-fluid rounded-start" alt="Manga cover">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title"><%= mangaData.find(m => m.id === item.mangaId).title %></h5>
+                          <p class="card-text">Last read: Chapter <%= item.lastReadChapter %></p>
+                          <a href="/manga/<%= item.mangaId %>" class="btn btn-sm btn-outline-primary">Continue Reading</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-5">
+              <i class="bi bi-book display-1 text-muted"></i>
+              <h3 class="text-muted">Your library is empty</h3>
+              <p>Start reading some manga to add them here</p>
+              <a href="/" class="btn btn-primary">Browse Manga</a>
+            </div>
+          <% } %>
+        </div>
+        
+        <div class="tab-pane fade" id="read-later">
+          <h3>Read Later</h3>
+          <p class="text-muted">Manga you've saved for later</p>
+          
+          <% if (user.readLater.length > 0) { %>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+              <% user.readLater.forEach(mangaId => { 
+                const manga = mangaData.find(m => m.id === mangaId);
+              %>
+                <div class="col">
+                  <div class="card h-100">
+                    <img src="<%= manga.cover %>" class="card-img-top" alt="<%= manga.title %>">
+                    <div class="card-body">
+                      <h5 class="card-title"><%= manga.title %></h5>
+                      <p class="card-text text-muted"><%= manga.author %></p>
+                    </div>
+                    <div class="card-footer">
+                      <div class="d-flex justify-content-between">
+                        <a href="/manga/<%= manga.id %>" class="btn btn-sm btn-outline-primary">Details</a>
+                        <button class="btn btn-sm btn-outline-danger remove-read-later" data-manga-id="<%= manga.id %>">
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="text-center py-5">
+              <i class="bi bi-bookmark display-1 text-muted"></i>
+              <h3 class="text-muted">Your read later list is empty</h3>
+              <p>Add manga to read later from their details page</p>
+              <a href="/" class="btn btn-primary">Browse Manga</a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+  // Remove from read later functionality
+  document.querySelectorAll('.remove-read-later').forEach(button => {
+    button.addEventListener('click', function() {
+      const mangaId = this.getAttribute('data-manga-id');
+      
+      fetch(`/api/remove-read-later/${mangaId}`, { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            this.closest('.col').remove();
+            
+            // If no items left, show empty state
+            if (document.querySelectorAll('.remove-read-later').length === 0) {
+              document.getElementById('read-later').innerHTML = `
+                <div class="text-center py-5">
+                  <i class="bi bi-bookmark display-1 text-muted"></i>
+                  <h3 class="text-muted">Your read later list is empty</h3>
+                  <p>Add manga to read later from their details page</p>
+                  <a href="/" class="btn btn-primary">Browse Manga</a>
+                </div>
+              `;
+            }
+          }
+        });
+    });
+  });
+</script>
