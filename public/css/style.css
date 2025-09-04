@@ -51,8 +51,10 @@ body {
 /* ✅ Updated Thumbnail Styling */
 .manga-thumbnail {
   width: 100%;
-  height: 250px; /* consistent height */
-  object-fit: cover; /* crop to fit like covers */
+  height: 250px;
+  /* consistent height */
+  object-fit: cover;
+  /* crop to fit like covers */
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   transition: transform 0.3s ease;
@@ -67,16 +69,21 @@ body {
   font-weight: 600;
   font-size: 1rem;
   margin-bottom: 0.5rem;
-  white-space: nowrap;       /* Prevent wrapping */
-  overflow: hidden;          /* Hide overflow */
-  text-overflow: ellipsis;   /* Add "..." */
+  white-space: nowrap;
+  /* Prevent wrapping */
+  overflow: hidden;
+  /* Hide overflow */
+  text-overflow: ellipsis;
+  /* Add "..." */
   max-width: 100%;
-  cursor: pointer;           /* Indicate hover available */
+  cursor: pointer;
+  /* Indicate hover available */
   position: relative;
 }
 
 .card-title:hover::after {
-  content: attr(data-fulltitle); /* show full title on hover */
+  content: attr(data-fulltitle);
+  /* show full title on hover */
   position: absolute;
   left: 0;
   top: -1.5rem;
@@ -86,7 +93,7 @@ body {
   border-radius: 4px;
   font-size: 0.85rem;
   white-space: normal;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
   z-index: 10;
 }
 
@@ -211,15 +218,16 @@ body {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .manga-thumbnail {
-    height: 200px; /* smaller on mobile */
+    height: 200px;
+    /* smaller on mobile */
   }
-  
+
   .reader-controls {
     flex-direction: column;
     gap: 0.5rem;
     border-radius: 20px;
   }
-  
+
   .reader-page {
     margin: 0 auto 1rem;
   }
@@ -227,8 +235,13 @@ body {
 
 /* Animation for page loading */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .reader-page {
@@ -236,7 +249,8 @@ body {
 }
 
 /* Focus styles for accessibility */
-a:focus, button:focus {
+a:focus,
+button:focus {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }

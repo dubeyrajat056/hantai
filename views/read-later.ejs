@@ -1,0 +1,84 @@
+<%- include('partials/header', {title: title}) %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Read Later</h2>
+    <span class="badge bg-primary"><%= mangas.length %> manga</span>
+  </div>
+  
+  <% if (mangas.length > 0) { %>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+      <% mangas.forEach(m => { %>
+        <div class="col">
+          <div class="card h-100 manga-card">
+            <a href="/manga/<%= m.id %>" class="text-decoration-none">
+              <img src="<%= m.thumbnail %>" class="card-img-top manga-thumbnail" alt="<%= m.title %>">
+            </a>
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="/manga/<%= m.id %>" class="text-decoration-none text-dark"><%= m.title %></a>
+              </h5>
+              <p class="card-text text-muted"><%= m.author || 'Unknown Author' %></p>
+              <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-<%= m.status === 'Ongoing' ? 'warning' : 'success' %>">
+                  <%= m.status || 'Unknown Status' %>
+                </span>
+                <small class="text-muted"><%= m.chapters ? m.chapters.length : 0 %> chapters</small>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-outline-danger w-100 remove-read-later" data-manga-id="<%= m.id %>">
+                <i class="bi bi-bookmark-x"></i> Remove
+              </button>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="text-center py-5">
+      <i class="bi bi-bookmark display-1 text-muted"></i>
+      <h3 class="text-muted">Your read later list is empty</h3>
+      <p>Add manga to read later from their details page</p>
+      <a href="/" class="btn btn-primary">Browse Manga</a>
+    </div>
+  <% } %>
+</main>
+
+<%- include('partials/footer') %>
+
+<script>
+  // Remove from read later functionality
+  document.querySelectorAll('.remove-read-later').forEach(button => {
+    button.addEventListener('click', function() {
+      const mangaId = this.getAttribute('data-manga-id');
+      
+      fetch(`/api/read-later/${mangaId}`, { 
+        method: 'DELETE'
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            this.closest('.col').remove();
+            
+            // If no items left, show empty state
+            if (document.querySelectorAll('.remove-read-later').length === 0) {
+              document.querySelector('main').innerHTML = `
+                <div class="text-center py-5">
+                  <i class="bi bi-bookmark display-1 text-muted"></i>
+                  <h3 class="text-muted">Your read later list is empty</h3>
+                  <p>Add manga to read later from their details page</p>
+                  <a href="/" class="btn btn-primary">Browse Manga</a>
+                </div>
+              `;
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to remove from read later. Please try again.');
+        });
+    });
+  });
+</script>
